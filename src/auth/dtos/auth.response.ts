@@ -1,15 +1,12 @@
-export type AuthResponse = {
-	tokens: AuthTokenResponse;
-	user: AuthUserResponse;
-};
+import { AuthTokenResponse } from './auth-token.response';
+import { AuthUserResponse } from './auth-user.response';
 
-export type AuthTokenResponse = {
-	access: string;
-	refresh: string;
-};
+export class AuthResponse {
+	public readonly tokens: AuthTokenResponse;
+	public readonly user: AuthUserResponse;
 
-export type AuthUserResponse = {
-	id: string;
-	name: string;
-	email: string;
-};
+	constructor(tokens: AuthTokenResponse, user: AuthUserResponse) {
+		this.tokens = tokens;
+		this.user = user;
+	}
+}

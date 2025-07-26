@@ -1,5 +1,7 @@
 import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
-import { AuthResponse, AuthTokenResponse, AuthUserResponse } from '../dtos/auth.response';
+import { AuthTokenResponse } from '../dtos/auth-token.response';
+import { AuthUserResponse } from '../dtos/auth-user.response';
+import { AuthResponse } from '../dtos/auth.response';
 import { LoginRequest } from '../dtos/login.request';
 import { RefreshRequest } from '../dtos/refresh.request';
 import { RegisterRequest } from '../dtos/register.request';
@@ -44,7 +46,6 @@ export class AuthService {
 		} catch {
 			throw new UnauthorizedException('Invalid or expired token');
 		}
-
 		const user = await this.usersService.findById(payload.sub);
 		if (!user) throw new UnauthorizedException('User not found');
 
@@ -52,17 +53,10 @@ export class AuthService {
 	}
 
 	private async generateAuthResponse(user: User, refreshToken?: string): Promise<AuthResponse> {
-		const userResponse: AuthUserResponse = {
-			id: user.id,
-			name: user.name,
-			email: user.email,
-		};
-
-		const tokens: AuthTokenResponse = {
-			access: await this.tokenService.generateAccessToken(user),
-			refresh: refreshToken ?? (await this.tokenService.generateRefreshToken(user)),
-		};
-
-		return { user: userResponse, tokens };
+		const access = await this.tokenService.generateAccessToken(user);
+		const refresh = refreshToken ?? (await this.tokenService.generateRefreshToken(user));
+		const tokens = new AuthTokenResponse(access, refresh);
+		const userResponse = new AuthUserResponse(user);
+		return new AuthResponse(tokens, userResponse);
 	}
 }
