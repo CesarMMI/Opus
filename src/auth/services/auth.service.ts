@@ -1,0 +1,69 @@
+import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { AuthResponse, AuthTokenResponse, AuthUserResponse } from '../dtos/auth.response';
+import { LoginRequest } from '../dtos/login.request';
+import { RefreshRequest } from '../dtos/refresh.request';
+import { RegisterRequest } from '../dtos/register.request';
+import { User } from '../entities/user.entity';
+import { TokenPayload } from '../types/token-payload';
+import { PasswordService } from './password.service';
+import { TokenService } from './token.service';
+import { UsersService } from './users.service';
+
+@Injectable()
+export class AuthService {
+	constructor(
+		private readonly passwordService: PasswordService,
+		private readonly tokenService: TokenService,
+		private readonly usersService: UsersService,
+	) {}
+
+	public async login(request: LoginRequest): Promise<AuthResponse> {
+		const user = await this.usersService.findByEmail(request.email);
+		if (!user) throw new UnauthorizedException('Email or password is incorrect');
+
+		const validPass = await this.passwordService.verify(user.password, request.password);
+		if (!validPass) throw new UnauthorizedException('Email or password is incorrect');
+
+		return this.generateAuthResponse(user);
+	}
+
+	public async register(request: RegisterRequest): Promise<AuthResponse> {
+		let user = await this.usersService.findByEmail(request.email);
+		if (user) throw new BadRequestException('Email already in use');
+
+		user = await this.usersService.create(request.name, request.email, request.password);
+		if (!user) throw new InternalServerErrorException('User creation failed');
+
+		return await this.generateAuthResponse(user);
+	}
+
+	public async refresh(request: RefreshRequest): Promise<AuthResponse> {
+		let payload: TokenPayload;
+		try {
+			payload = await this.tokenService.verifyRefreshToken(request.refreshToken);
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		} catch (_: unknown) {
+			throw new UnauthorizedException('Invalid token');
+		}
+
+		const user = await this.usersService.findById(payload.sub);
+		if (!user) throw new UnauthorizedException('User not found');
+
+		return await this.generateAuthResponse(user, request.refreshToken);
+	}
+
+	private async generateAuthResponse(user: User, refreshToken?: string): Promise<AuthResponse> {
+		const userResponse: AuthUserResponse = {
+			id: user.id,
+			name: user.name,
+			email: user.email,
+		};
+
+		const tokens: AuthTokenResponse = {
+			access: await this.tokenService.generateAccessToken(user),
+			refresh: refreshToken ?? (await this.tokenService.generateRefreshToken(user)),
+		};
+
+		return { user: userResponse, tokens };
+	}
+}
