@@ -41,9 +41,8 @@ export class AuthService {
 		let payload: TokenPayload;
 		try {
 			payload = await this.tokenService.verifyRefreshToken(request.refreshToken);
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		} catch (_: unknown) {
-			throw new UnauthorizedException('Invalid token');
+		} catch {
+			throw new UnauthorizedException('Invalid or expired token');
 		}
 
 		const user = await this.usersService.findById(payload.sub);

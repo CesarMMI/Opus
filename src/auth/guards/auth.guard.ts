@@ -8,21 +8,20 @@ export class AuthGuard implements CanActivate {
 
 	public async canActivate(context: ExecutionContext): Promise<boolean> {
 		const request = context.switchToHttp().getRequest<Request>();
-		const token = this.extractTokenFromHeader(request);
-		if (!token) throw new UnauthorizedException();
-
 		try {
+			const token = this.extractTokenFromHeader(request);
 			const payload = await this.tokenService.verifyAccessToken(token);
 			request['user'] = payload;
 		} catch {
-			throw new UnauthorizedException();
+			throw new UnauthorizedException('Invalid or expired token');
 		}
-
 		return true;
 	}
 
-	private extractTokenFromHeader(request: Request): string | undefined {
-		const [type, token] = request.headers.authorization?.split(' ') ?? [];
-		return type === 'Bearer' ? token : undefined;
+	private extractTokenFromHeader(request: Request): string {
+		const [type, headerToken] = request.headers.authorization?.split(' ') ?? [];
+		const token = type === 'Bearer' ? headerToken : undefined;
+		if (!token) throw new UnauthorizedException('Authorization header is missing or malformed');
+		return token;
 	}
 }
