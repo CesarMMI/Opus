@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
-import { databaseConfigs } from './core/configs/database-configs';
+import { DatabaseModule } from './database/database.module';
+import { SqlServerProvider } from './database/providers/sql-server.provider';
+import { EnvironmentModule } from './environment/environment.module';
 
 @Module({
-	imports: [ConfigModule.forRoot(), TypeOrmModule.forRootAsync(databaseConfigs()), AuthModule],
+	imports: [ConfigModule.forRoot(), DatabaseModule.forRoot(SqlServerProvider), AuthModule, EnvironmentModule],
 })
 export class AppModule {}
