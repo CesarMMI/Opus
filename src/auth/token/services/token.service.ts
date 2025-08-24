@@ -1,7 +1,7 @@
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { IEnvironmentService } from '../../../environment/interfaces/environment.service.interface';
-import { User } from '../../entities/user.entity';
+import { User } from '../../../entities/user.entity';
 import { ITokenService } from '../interfaces/token.service.interface';
 import { TokenPayload } from '../types/token-payload';
 

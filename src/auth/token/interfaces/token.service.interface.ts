@@ -1,4 +1,4 @@
-import { User } from './../../entities/user.entity';
+import { User } from '../../../entities/user.entity';
 import { TokenPayload } from './../types/token-payload';
 
 export const ITokenService = Symbol('ITokenService');
