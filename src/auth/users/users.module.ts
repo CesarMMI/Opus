@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
 import { DatabaseModule } from '../../database/database.module';
 import { User } from '../../entities/user.entity';
-import { IUsersService } from './interfaces/users.service.interface';
-import { UsersService } from './services/users.service';
+import { IUsersRepository } from './interfaces/users.repository.interface';
+import { UsersRepository } from './services/users.repository';
 
 @Module({
 	imports: [DatabaseModule.forFeature([User])],
 	providers: [
 		{
-			provide: IUsersService,
-			useClass: UsersService,
+			provide: IUsersRepository,
+			useClass: UsersRepository,
 		},
 	],
-	exports: [IUsersService],
+	exports: [IUsersRepository],
 })
 export class UsersModule {}

@@ -39,7 +39,7 @@ export class TokenService implements ITokenService {
 	}
 
 	private generateToken(user: User, secret: string, expiresIn: string): Promise<string> {
-		const payload: TokenPayload = { sub: user.id, name: user.name };
+		const payload: TokenPayload = { sub: user.email, name: user.name };
 		return this.jwtService.signAsync(payload, { secret, expiresIn });
 	}
 

@@ -2,18 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../../entities/user.entity';
-import { IUsersService } from '../interfaces/users.service.interface';
+import { IUsersRepository } from '../interfaces/users.repository.interface';
 
 @Injectable()
-export class UsersService implements IUsersService {
-	constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
-
-	findById(id: string): Promise<User | null> {
-		return this.userRepository.findOne({ where: { id } });
-	}
+export class UsersRepository implements IUsersRepository {
+	constructor(@InjectRepository(User) private readonly ormRepository: Repository<User>) {}
 
 	findByEmail(email: string): Promise<User | null> {
-		return this.userRepository.findOne({ where: { email } });
+		return this.ormRepository.findOne({ where: { email } });
 	}
 
 	async create(name: string, email: string, password: string): Promise<User> {
@@ -21,7 +17,7 @@ export class UsersService implements IUsersService {
 		user.name = name;
 		user.email = email;
 		user.password = password;
-		user = await this.userRepository.save(user);
+		user = await this.ormRepository.save(user);
 		return user;
 	}
 }

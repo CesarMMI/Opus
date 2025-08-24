@@ -6,23 +6,23 @@ import {
 	UnauthorizedException,
 } from '@nestjs/common';
 import { User } from '../../entities/user.entity';
+import { IPasswordService } from '../password/interfaces/password.service.interface';
+import { ITokenService } from '../token/interfaces/token.service.interface';
+import { TokenPayload } from '../token/types/token-payload';
 import { AuthTokenResponse } from '../types/auth-token.response';
 import { AuthUserResponse } from '../types/auth-user.response';
 import { AuthResponse } from '../types/auth.response';
 import { LoginRequest } from '../types/login.request';
 import { RefreshRequest } from '../types/refresh.request';
 import { RegisterRequest } from '../types/register.request';
-import { IPasswordService } from '../password/interfaces/password.service.interface';
-import { ITokenService } from '../token/interfaces/token.service.interface';
-import { TokenPayload } from '../token/types/token-payload';
-import { IUsersService } from '../users/interfaces/users.service.interface';
+import { IUsersRepository } from '../users/interfaces/users.repository.interface';
 
 @Injectable()
 export class AuthService {
 	constructor(
 		@Inject(IPasswordService) private readonly passwordService: IPasswordService,
 		@Inject(ITokenService) private readonly tokenService: ITokenService,
-		@Inject(IUsersService) private readonly usersService: IUsersService,
+		@Inject(IUsersRepository) private readonly usersService: IUsersRepository,
 	) {}
 
 	async login(request: LoginRequest): Promise<AuthResponse> {
@@ -53,7 +53,7 @@ export class AuthService {
 		} catch {
 			throw new UnauthorizedException('Invalid or expired token');
 		}
-		const user = await this.usersService.findById(payload.sub);
+		const user = await this.usersService.findByEmail(payload.sub);
 		if (!user) throw new UnauthorizedException('User not found');
 
 		return await this.generateAuthResponse(user, request.refreshToken);
