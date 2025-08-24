@@ -11,16 +11,16 @@ import { AuthResponse } from '../dtos/auth.response';
 import { LoginRequest } from '../dtos/login.request';
 import { RefreshRequest } from '../dtos/refresh.request';
 import { RegisterRequest } from '../dtos/register.request';
-import { User } from '../entities/user.entity';
+import { User } from '../../entities/user.entity';
+import { IPasswordService } from '../password/interfaces/password.service.interface';
 import { ITokenService } from '../token/interfaces/token.service.interface';
 import { TokenPayload } from '../token/types/token-payload';
-import { PasswordService } from './password.service';
 import { UsersService } from './users.service';
 
 @Injectable()
 export class AuthService {
 	constructor(
-		private readonly passwordService: PasswordService,
+		@Inject(IPasswordService) private readonly passwordService: IPasswordService,
 		@Inject(ITokenService) private readonly tokenService: ITokenService,
 		private readonly usersService: UsersService,
 	) {}

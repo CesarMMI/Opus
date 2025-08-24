@@ -1,9 +1,10 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Scope } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { IEnvironmentService } from '../../environment/interfaces/environment.service.interface';
+import { IEnvironmentService } from '../../../environment/interfaces/environment.service.interface';
+import { IPasswordService } from '../interfaces/password.service.interface';
 
-@Injectable()
-export class PasswordService {
+@Injectable({ scope: Scope.DEFAULT })
+export class PasswordService implements IPasswordService {
 	private readonly passwordSalt: number;
 
 	constructor(@Inject(IEnvironmentService) environmentService: IEnvironmentService) {
