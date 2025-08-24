@@ -1,16 +1,15 @@
-import { ConfigService } from '@nestjs/config';
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
+import { Environment } from '../../environment/types/environment';
 import { DatabaseProvider } from './database.provider';
 
 export const MySqlProvider: DatabaseProvider<MysqlConnectionOptions> = (
-	config: ConfigService,
+	environment: Environment,
 ): MysqlConnectionOptions => ({
 	type: 'mysql',
-	host: config.get<string>('DATABASE_HOST'),
-	port: config.get<number>('DATABASE_PORT'),
-	username: config.get<string>('DATABASE_USER'),
-	password: config.get<string>('DATABASE_PASS'),
-	database: config.get<string>('DATABASE_DATABASE'),
-	synchronize: config.get<boolean>('DATABASE_SYNC'),
-	entities: [__dirname + '/**/*.entity{.ts,.js}'],
+	host: environment.database.host,
+	port: environment.database.port,
+	username: environment.database.user,
+	password: environment.database.pass,
+	database: environment.database.database,
+	synchronize: environment.database.sync,
 });

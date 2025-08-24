@@ -1,39 +1,39 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { IEnvironmentService } from '../../environment/interfaces/environment.service.interface';
 import { User } from '../entities/user.entity';
 import { TokenPayload } from '../types/token-payload';
 
 @Injectable()
 export class TokenService {
 	private readonly accessExp: string;
-	private readonly refreshExp: string;
 	private readonly accessSecret: string;
+	private readonly refreshExp: string;
 	private readonly refreshSecret: string;
 
 	constructor(
-		configService: ConfigService,
+		@Inject(IEnvironmentService) environmentService: IEnvironmentService,
 		private readonly jwtService: JwtService,
 	) {
-		this.accessExp = configService.get<string>('JWT_ACCESS_EXP')!;
-		this.refreshExp = configService.get<string>('JWT_REFRESH_EXP')!;
-		this.accessSecret = configService.get<string>('JWT_ACCESS_SECRET')!;
-		this.refreshSecret = configService.get<string>('JWT_REFRESH_SECRET')!;
+		this.accessExp = environmentService.environment.security.jwt.accessExp;
+		this.accessSecret = environmentService.environment.security.jwt.accessSecret;
+		this.refreshExp = environmentService.environment.security.jwt.refreshExp;
+		this.refreshSecret = environmentService.environment.security.jwt.refreshSecret;
 	}
 
-	public generateAccessToken(user: User): Promise<string> {
+	generateAccessToken(user: User): Promise<string> {
 		return this.generateToken(user, this.accessSecret, this.accessExp);
 	}
 
-	public generateRefreshToken(user: User): Promise<string> {
+	generateRefreshToken(user: User): Promise<string> {
 		return this.generateToken(user, this.refreshSecret, this.refreshExp);
 	}
 
-	public verifyAccessToken(token: string): Promise<TokenPayload> {
+	verifyAccessToken(token: string): Promise<TokenPayload> {
 		return this.verifyToken(token, this.accessSecret);
 	}
 
-	public verifyRefreshToken(token: string): Promise<TokenPayload> {
+	verifyRefreshToken(token: string): Promise<TokenPayload> {
 		return this.verifyToken(token, this.refreshSecret);
 	}
 

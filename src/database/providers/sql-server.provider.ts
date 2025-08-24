@@ -1,21 +1,17 @@
-import { ConfigService } from '@nestjs/config';
 import { SqlServerConnectionOptions } from 'typeorm/driver/sqlserver/SqlServerConnectionOptions';
+import { Environment } from '../../environment/types/environment';
 import { DatabaseProvider } from './database.provider';
 
-export const SqlServerProvider: DatabaseProvider<SqlServerConnectionOptions> = (config: ConfigService) => {
+export const SqlServerProvider: DatabaseProvider<SqlServerConnectionOptions> = (environment: Environment) => {
 	const options: SqlServerConnectionOptions = {
 		type: 'mssql',
-		host: config.get<string>('DATABASE_HOST'),
-		port: +config.get<number>('DATABASE_PORT')!,
-		username: config.get<string>('DATABASE_USER'),
-		password: config.get<string>('DATABASE_PASS'),
-		database: config.get<string>('DATABASE_DATABASE'),
-		synchronize: config.get<boolean>('DATABASE_SYNC'),
-		options: {
-			encrypt: false,
-			trustServerCertificate: true,
-		},
-		entities: [__dirname + '/**/*.entity{.ts,.js}'],
+		host: environment.database.host,
+		port: environment.database.port,
+		username: environment.database.user,
+		password: environment.database.pass,
+		database: environment.database.database,
+		synchronize: environment.database.sync,
+		options: { encrypt: false, trustServerCertificate: true },
 	};
 	return options;
 };
