@@ -1,11 +1,12 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Scope } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { IEnvironmentService } from '../../environment/interfaces/environment.service.interface';
-import { User } from '../entities/user.entity';
+import { IEnvironmentService } from '../../../environment/interfaces/environment.service.interface';
+import { User } from '../../entities/user.entity';
+import { ITokenService } from '../interfaces/token.service.interface';
 import { TokenPayload } from '../types/token-payload';
 
-@Injectable()
-export class TokenService {
+@Injectable({ scope: Scope.DEFAULT })
+export class TokenService implements ITokenService {
 	private readonly accessExp: string;
 	private readonly accessSecret: string;
 	private readonly refreshExp: string;
@@ -38,12 +39,8 @@ export class TokenService {
 	}
 
 	private generateToken(user: User, secret: string, expiresIn: string): Promise<string> {
-		const payload = this.generatePayload(user);
+		const payload: TokenPayload = { sub: user.id, name: user.name };
 		return this.jwtService.signAsync(payload, { secret, expiresIn });
-	}
-
-	private generatePayload(user: User): TokenPayload {
-		return { sub: user.id, name: user.name };
 	}
 
 	private verifyToken(token: string, secret: string): Promise<TokenPayload> {

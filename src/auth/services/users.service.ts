@@ -2,15 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
-import { PasswordService } from './password.service';
 
 @Injectable()
 export class UsersService {
-	constructor(
-		@InjectRepository(User)
-		private readonly userRepository: Repository<User>,
-		private readonly passwordService: PasswordService,
-	) {}
+	constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
 
 	findById(id: string): Promise<User | null> {
 		return this.userRepository.findOne({ where: { id } });
@@ -24,7 +19,7 @@ export class UsersService {
 		let user = new User();
 		user.name = name;
 		user.email = email;
-		user.password = await this.passwordService.hash(password);
+		user.password = password;
 		user = await this.userRepository.save(user);
 		return user;
 	}

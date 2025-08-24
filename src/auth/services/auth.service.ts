@@ -1,4 +1,10 @@
-import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import {
+	BadRequestException,
+	Inject,
+	Injectable,
+	InternalServerErrorException,
+	UnauthorizedException,
+} from '@nestjs/common';
 import { AuthTokenResponse } from '../dtos/auth-token.response';
 import { AuthUserResponse } from '../dtos/auth-user.response';
 import { AuthResponse } from '../dtos/auth.response';
@@ -6,16 +12,16 @@ import { LoginRequest } from '../dtos/login.request';
 import { RefreshRequest } from '../dtos/refresh.request';
 import { RegisterRequest } from '../dtos/register.request';
 import { User } from '../entities/user.entity';
-import { TokenPayload } from '../types/token-payload';
+import { ITokenService } from '../token/interfaces/token.service.interface';
+import { TokenPayload } from '../token/types/token-payload';
 import { PasswordService } from './password.service';
-import { TokenService } from './token.service';
 import { UsersService } from './users.service';
 
 @Injectable()
 export class AuthService {
 	constructor(
 		private readonly passwordService: PasswordService,
-		private readonly tokenService: TokenService,
+		@Inject(ITokenService) private readonly tokenService: ITokenService,
 		private readonly usersService: UsersService,
 	) {}
 
@@ -33,7 +39,8 @@ export class AuthService {
 		let user = await this.usersService.findByEmail(request.email);
 		if (user) throw new BadRequestException('Email already in use');
 
-		user = await this.usersService.create(request.name, request.email, request.password);
+		const hashedPassword = await this.passwordService.hash(request.password);
+		user = await this.usersService.create(request.name, request.email, hashedPassword);
 		if (!user) throw new InternalServerErrorException('User creation failed');
 
 		return await this.generateAuthResponse(user);
