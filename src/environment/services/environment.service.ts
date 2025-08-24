@@ -7,7 +7,7 @@ import { EnvironmentNotFoundError } from '../types/environment-not-found.error';
 import { EnvironmentSecurity } from '../types/environment-security';
 
 @Injectable({ scope: Scope.DEFAULT })
-export class EnvironmentServiceImp implements IEnvironmentService {
+export class EnvironmentService implements IEnvironmentService {
 	private _environment: Environment;
 
 	get environment(): Environment {

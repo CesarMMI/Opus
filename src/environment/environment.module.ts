@@ -1,14 +1,14 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigModuleOptions } from '@nestjs/config';
 import { IEnvironmentService } from './interfaces/environment.service.interface';
-import { EnvironmentServiceImp } from './services/environment.service';
+import { EnvironmentService } from './services/environment.service';
 
 @Module({
 	imports: [ConfigModule],
 	providers: [
 		{
 			provide: IEnvironmentService,
-			useClass: EnvironmentServiceImp,
+			useClass: EnvironmentService,
 		},
 	],
 	exports: [IEnvironmentService],
