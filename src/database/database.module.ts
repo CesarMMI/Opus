@@ -1,8 +1,10 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from 'src/auth/entities/user.entity';
+import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
+import { User } from 'src/entities/user.entity';
 import { EnvironmentModule } from 'src/environment/environment.module';
 import { IEnvironmentService } from 'src/environment/interfaces/environment.service.interface';
+import { DataSource, DataSourceOptions } from 'typeorm';
 import { DatabaseProvider } from './providers/database.provider';
 
 @Module({})
@@ -20,6 +22,16 @@ export class DatabaseModule {
 					}),
 				}),
 			],
+		};
+	}
+
+	static forFeature(
+		entities?: EntityClassOrSchema[],
+		dataSource?: DataSource | DataSourceOptions | string,
+	): DynamicModule {
+		return {
+			module: DatabaseModule,
+			imports: [TypeOrmModule.forFeature(entities, dataSource)],
 		};
 	}
 }
