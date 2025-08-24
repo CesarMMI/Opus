@@ -5,24 +5,24 @@ import {
 	InternalServerErrorException,
 	UnauthorizedException,
 } from '@nestjs/common';
-import { AuthTokenResponse } from '../dtos/auth-token.response';
-import { AuthUserResponse } from '../dtos/auth-user.response';
-import { AuthResponse } from '../dtos/auth.response';
-import { LoginRequest } from '../dtos/login.request';
-import { RefreshRequest } from '../dtos/refresh.request';
-import { RegisterRequest } from '../dtos/register.request';
 import { User } from '../../entities/user.entity';
+import { AuthTokenResponse } from '../types/auth-token.response';
+import { AuthUserResponse } from '../types/auth-user.response';
+import { AuthResponse } from '../types/auth.response';
+import { LoginRequest } from '../types/login.request';
+import { RefreshRequest } from '../types/refresh.request';
+import { RegisterRequest } from '../types/register.request';
 import { IPasswordService } from '../password/interfaces/password.service.interface';
 import { ITokenService } from '../token/interfaces/token.service.interface';
 import { TokenPayload } from '../token/types/token-payload';
-import { UsersService } from './users.service';
+import { IUsersService } from '../users/interfaces/users.service.interface';
 
 @Injectable()
 export class AuthService {
 	constructor(
 		@Inject(IPasswordService) private readonly passwordService: IPasswordService,
 		@Inject(ITokenService) private readonly tokenService: ITokenService,
-		private readonly usersService: UsersService,
+		@Inject(IUsersService) private readonly usersService: IUsersService,
 	) {}
 
 	async login(request: LoginRequest): Promise<AuthResponse> {
