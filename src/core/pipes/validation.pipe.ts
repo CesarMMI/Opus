@@ -4,7 +4,7 @@ import { validate, ValidationError } from 'class-validator';
 
 @Injectable()
 export class ValidationPipe implements PipeTransform<unknown> {
-	public async transform(value: unknown, { metatype }: ArgumentMetadata) {
+	async transform(value: unknown, { metatype }: ArgumentMetadata) {
 		if (!metatype || !this.toValidate(metatype)) {
 			return value;
 		}

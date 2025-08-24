@@ -1,6 +1,6 @@
 export class AuthTokenResponse {
-	public readonly access: string;
-	public readonly refresh: string;
+	readonly access: string;
+	readonly refresh: string;
 
 	constructor(access: string, refresh: string) {
 		this.access = access;

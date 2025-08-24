@@ -11,19 +11,19 @@ export class AuthController {
 
 	@Post('login')
 	@HttpCode(200)
-	public async login(@Body() body: LoginRequest): Promise<AuthResponse> {
+	async login(@Body() body: LoginRequest): Promise<AuthResponse> {
 		return this.authService.login(body);
 	}
 
 	@Post('register')
-	@HttpCode(201)
-	public async register(@Body() body: RegisterRequest): Promise<AuthResponse> {
-		return this.authService.register(body);
+	@HttpCode(204)
+	async register(@Body() body: RegisterRequest): Promise<void> {
+		await this.authService.register(body);
 	}
 
 	@Post('refresh')
 	@HttpCode(200)
-	public async refresh(@Body() body: RefreshRequest): Promise<AuthResponse> {
+	async refresh(@Body() body: RefreshRequest): Promise<AuthResponse> {
 		return this.authService.refresh(body);
 	}
 }

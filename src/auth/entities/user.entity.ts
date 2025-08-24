@@ -5,13 +5,13 @@ export class User {
 	@PrimaryGeneratedColumn('uuid')
 	id: string;
 	@Column()
-	public name: string;
+	name: string;
 	@Column()
-	public email: string;
+	email: string;
 	@Column()
-	public password: string;
+	password: string;
 	@CreateDateColumn()
-	public createdAt: Date;
+	createdAt: Date;
 	@UpdateDateColumn()
-	public updatedAt: Date;
+	updatedAt: Date;
 }

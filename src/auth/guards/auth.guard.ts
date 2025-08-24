@@ -6,7 +6,7 @@ import { TokenService } from '../services/token.service';
 export class AuthGuard implements CanActivate {
 	constructor(private readonly tokenService: TokenService) {}
 
-	public async canActivate(context: ExecutionContext): Promise<boolean> {
+	async canActivate(context: ExecutionContext): Promise<boolean> {
 		const request = context.switchToHttp().getRequest<Request>();
 		try {
 			const token = this.extractTokenFromHeader(request);

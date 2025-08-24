@@ -19,7 +19,7 @@ export class AuthService {
 		private readonly usersService: UsersService,
 	) {}
 
-	public async login(request: LoginRequest): Promise<AuthResponse> {
+	async login(request: LoginRequest): Promise<AuthResponse> {
 		const user = await this.usersService.findByEmail(request.email);
 		if (!user) throw new UnauthorizedException('Email or password is incorrect');
 
@@ -29,7 +29,7 @@ export class AuthService {
 		return this.generateAuthResponse(user);
 	}
 
-	public async register(request: RegisterRequest): Promise<AuthResponse> {
+	async register(request: RegisterRequest): Promise<AuthResponse> {
 		let user = await this.usersService.findByEmail(request.email);
 		if (user) throw new BadRequestException('Email already in use');
 
@@ -39,7 +39,7 @@ export class AuthService {
 		return await this.generateAuthResponse(user);
 	}
 
-	public async refresh(request: RefreshRequest): Promise<AuthResponse> {
+	async refresh(request: RefreshRequest): Promise<AuthResponse> {
 		let payload: TokenPayload;
 		try {
 			payload = await this.tokenService.verifyRefreshToken(request.refreshToken);

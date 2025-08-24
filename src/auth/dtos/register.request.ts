@@ -4,13 +4,13 @@ export class RegisterRequest {
 	@MaxLength(50)
 	@MinLength(3)
 	@IsString()
-	public name: string;
+	name: string;
 	@MaxLength(50)
 	@MinLength(3)
 	@IsEmail(undefined, { message: 'Invalid email' })
-	public email: string;
+	email: string;
 	@MaxLength(50)
 	@MinLength(5)
 	@IsString()
-	public password: string;
+	password: string;
 }

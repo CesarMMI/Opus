@@ -12,15 +12,15 @@ export class UsersService {
 		private readonly passwordService: PasswordService,
 	) {}
 
-	public findById(id: string): Promise<User | null> {
+	findById(id: string): Promise<User | null> {
 		return this.userRepository.findOne({ where: { id } });
 	}
 
-	public findByEmail(email: string): Promise<User | null> {
+	findByEmail(email: string): Promise<User | null> {
 		return this.userRepository.findOne({ where: { email } });
 	}
 
-	public async create(name: string, email: string, password: string): Promise<User> {
+	async create(name: string, email: string, password: string): Promise<User> {
 		let user = new User();
 		user.name = name;
 		user.email = email;
