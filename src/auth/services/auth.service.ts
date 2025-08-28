@@ -52,7 +52,7 @@ export class AuthService {
 		} catch {
 			throw new UnauthorizedException('Invalid or expired token');
 		}
-		const user = await this.usersService.findByEmail(payload.sub);
+		const user = await this.usersService.findById(payload.sub);
 		if (!user) throw new UnauthorizedException('User not found');
 
 		return await this.generateAuthResponse(user, request.refreshToken);
