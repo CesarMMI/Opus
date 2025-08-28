@@ -1,28 +1,22 @@
-import {
-	BadRequestException,
-	Inject,
-	Injectable,
-	InternalServerErrorException,
-	UnauthorizedException,
-} from '@nestjs/common';
-import { User } from '../../entities/user.entity';
-import { IPasswordService } from '../password/interfaces/password.service.interface';
-import { ITokenService } from '../token/interfaces/token.service.interface';
-import { TokenPayload } from '../token/types/token-payload';
-import { AuthTokenResponse } from '../types/auth-token.response';
-import { AuthUserResponse } from '../types/auth-user.response';
-import { AuthResponse } from '../types/auth.response';
-import { LoginRequest } from '../types/login.request';
-import { RefreshRequest } from '../types/refresh.request';
-import { RegisterRequest } from '../types/register.request';
-import { IUsersRepository } from '../users/interfaces/users.repository.interface';
+import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { User } from 'src/auth/entities/user.entity';
+import { AuthTokenResponse } from '../types/responses/auth-token.response';
+import { AuthUserResponse } from '../types/responses/auth-user.response';
+import { AuthResponse } from '../types/responses/auth.response';
+import { LoginRequest } from '../types/requests/login.request';
+import { RefreshRequest } from '../types/requests/refresh.request';
+import { RegisterRequest } from '../types/requests/register.request';
+import { TokenPayload } from '../types/token-payload';
+import { PasswordService } from './password.service';
+import { TokenService } from './token.service';
+import { UsersService } from './users.service';
 
 @Injectable()
 export class AuthService {
 	constructor(
-		@Inject(IPasswordService) private readonly passwordService: IPasswordService,
-		@Inject(ITokenService) private readonly tokenService: ITokenService,
-		@Inject(IUsersRepository) private readonly usersService: IUsersRepository,
+		private readonly passwordService: PasswordService,
+		private readonly tokenService: TokenService,
+		private readonly usersService: UsersService,
 	) {}
 
 	async login(request: LoginRequest): Promise<AuthResponse> {
@@ -36,11 +30,16 @@ export class AuthService {
 	}
 
 	async register(request: RegisterRequest): Promise<AuthResponse> {
-		let user = await this.usersService.findByEmail(request.email);
-		if (user) throw new BadRequestException('Email already in use');
+		const saved = await this.usersService.findByEmail(request.email);
+		if (saved) throw new BadRequestException('Email already in use');
 
+		let user = new User();
+		user.name = request.name;
+		user.email = request.email;
 		const hashedPassword = await this.passwordService.hash(request.password);
-		user = await this.usersService.create(request.name, request.email, hashedPassword);
+		user.password = hashedPassword;
+
+		user = await this.usersService.save(user);
 		if (!user) throw new InternalServerErrorException('User creation failed');
 
 		return await this.generateAuthResponse(user);
@@ -60,8 +59,8 @@ export class AuthService {
 	}
 
 	private async generateAuthResponse(user: User, refreshToken?: string): Promise<AuthResponse> {
-		const access = await this.tokenService.generateAccessToken(user);
-		const refresh = refreshToken ?? (await this.tokenService.generateRefreshToken(user));
+		const access = await this.tokenService.generateAccessToken(user.id, user.name);
+		const refresh = refreshToken ?? (await this.tokenService.generateRefreshToken(user.id, user.name));
 		const tokens = new AuthTokenResponse(access, refresh);
 		const userResponse = new AuthUserResponse(user);
 		return new AuthResponse(tokens, userResponse);

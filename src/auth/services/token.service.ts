@@ -1,12 +1,10 @@
-import { Inject, Injectable, Scope } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { IEnvironmentService } from '../../../environment/interfaces/environment.service.interface';
-import { User } from '../../../entities/user.entity';
-import { ITokenService } from '../interfaces/token.service.interface';
+import { IEnvironmentService } from '../../environment/interfaces/environment.service.interface';
 import { TokenPayload } from '../types/token-payload';
 
-@Injectable({ scope: Scope.DEFAULT })
-export class TokenService implements ITokenService {
+@Injectable()
+export class TokenService {
 	private readonly accessExp: string;
 	private readonly accessSecret: string;
 	private readonly refreshExp: string;
@@ -22,12 +20,12 @@ export class TokenService implements ITokenService {
 		this.refreshSecret = environmentService.environment.security.jwt.refreshSecret;
 	}
 
-	generateAccessToken(user: User): Promise<string> {
-		return this.generateToken(user, this.accessSecret, this.accessExp);
+	generateAccessToken(sub: string, name: string): Promise<string> {
+		return this.generateToken(sub, name, this.accessSecret, this.accessExp);
 	}
 
-	generateRefreshToken(user: User): Promise<string> {
-		return this.generateToken(user, this.refreshSecret, this.refreshExp);
+	generateRefreshToken(sub: string, name: string): Promise<string> {
+		return this.generateToken(sub, name, this.refreshSecret, this.refreshExp);
 	}
 
 	verifyAccessToken(token: string): Promise<TokenPayload> {
@@ -38,8 +36,8 @@ export class TokenService implements ITokenService {
 		return this.verifyToken(token, this.refreshSecret);
 	}
 
-	private generateToken(user: User, secret: string, expiresIn: string): Promise<string> {
-		const payload: TokenPayload = { sub: user.email, name: user.name };
+	private generateToken(sub: string, name: string, secret: string, expiresIn: string): Promise<string> {
+		const payload: TokenPayload = { sub, name };
 		return this.jwtService.signAsync(payload, { secret, expiresIn });
 	}
 
