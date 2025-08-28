@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/auth/entities/user.entity';
 import { Repository } from 'typeorm';
 import { Task } from '../entities/task.entity';
 import { CreateTaskRequest } from '../types/create-task.request';
@@ -14,8 +15,7 @@ export class TasksService {
 		task.title = request.title;
 		task.description = request.description;
 		task.done = false;
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-		task.user = { id: userId } as any;
+		task.user = { id: userId } as User;
 		task = await this.taskRepository.save(task);
 		return task;
 	}
