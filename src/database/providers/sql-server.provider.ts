@@ -1,8 +1,8 @@
 import { SqlServerConnectionOptions } from 'typeorm/driver/sqlserver/SqlServerConnectionOptions';
 import { Environment } from '../../environment/types/environment';
-import { DatabaseProvider } from './database.provider';
+import { IDatabaseProvider } from './database.provider';
 
-export const SqlServerProvider: DatabaseProvider<SqlServerConnectionOptions> = (environment: Environment) => {
+export const SqlServerProvider: IDatabaseProvider<SqlServerConnectionOptions> = (environment: Environment) => {
 	const options: SqlServerConnectionOptions = {
 		type: 'mssql',
 		host: environment.database.host,

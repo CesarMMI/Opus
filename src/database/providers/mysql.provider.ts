@@ -1,8 +1,8 @@
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 import { Environment } from '../../environment/types/environment';
-import { DatabaseProvider } from './database.provider';
+import { IDatabaseProvider } from './database.provider';
 
-export const MySqlProvider: DatabaseProvider<MysqlConnectionOptions> = (
+export const MySqlProvider: IDatabaseProvider<MysqlConnectionOptions> = (
 	environment: Environment,
 ): MysqlConnectionOptions => ({
 	type: 'mysql',
