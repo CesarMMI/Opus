@@ -1,11 +1,11 @@
-import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { User } from 'src/auth/entities/user.entity';
-import { AuthTokenResponse } from '../types/responses/auth-token.response';
-import { AuthUserResponse } from '../types/responses/auth-user.response';
-import { AuthResponse } from '../types/responses/auth.response';
 import { LoginRequest } from '../types/requests/login.request';
 import { RefreshRequest } from '../types/requests/refresh.request';
 import { RegisterRequest } from '../types/requests/register.request';
+import { AuthTokenResponse } from '../types/responses/auth-token.response';
+import { AuthUserResponse } from '../types/responses/auth-user.response';
+import { AuthResponse } from '../types/responses/auth.response';
 import { TokenPayload } from '../types/token-payload';
 import { PasswordService } from './password.service';
 import { TokenService } from './token.service';
@@ -40,8 +40,6 @@ export class AuthService {
 		user.password = hashedPassword;
 
 		user = await this.usersService.save(user);
-		if (!user) throw new InternalServerErrorException('User creation failed');
-
 		return await this.generateAuthResponse(user);
 	}
 
