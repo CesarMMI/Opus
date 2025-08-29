@@ -2,9 +2,7 @@ import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOpti
 import { Environment } from '../../environment/types/environment';
 import { IDatabaseProvider } from './database.provider';
 
-export const MySqlProvider: IDatabaseProvider<MysqlConnectionOptions> = (
-	environment: Environment,
-): MysqlConnectionOptions => ({
+export const MySqlProvider: IDatabaseProvider<MysqlConnectionOptions> = (environment: Environment) => ({
 	type: 'mysql',
 	host: environment.database.host,
 	port: environment.database.port,

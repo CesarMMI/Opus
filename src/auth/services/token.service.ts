@@ -1,6 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { IEnvironmentService } from '../../environment/interfaces/environment.service.interface';
+import { EnvironmentService } from '../../environment/services/environment.service';
 import { TokenPayload } from '../types/token-payload';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class TokenService {
 	private readonly refreshSecret: string;
 
 	constructor(
-		@Inject(IEnvironmentService) environmentService: IEnvironmentService,
+		environmentService: EnvironmentService,
 		private readonly jwtService: JwtService,
 	) {
 		this.accessExp = environmentService.environment.security.jwt.accessExp;

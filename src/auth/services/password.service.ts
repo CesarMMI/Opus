@@ -1,12 +1,12 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { IEnvironmentService } from '../../environment/interfaces/environment.service.interface';
+import { EnvironmentService } from '../../environment/services/environment.service';
 
 @Injectable()
 export class PasswordService {
 	private readonly passwordSalt: number;
 
-	constructor(@Inject(IEnvironmentService) environmentService: IEnvironmentService) {
+	constructor(environmentService: EnvironmentService) {
 		this.passwordSalt = environmentService.environment.security.passwordSalt;
 	}
 

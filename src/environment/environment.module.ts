@@ -1,17 +1,11 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigModuleOptions } from '@nestjs/config';
-import { IEnvironmentService } from './interfaces/environment.service.interface';
 import { EnvironmentService } from './services/environment.service';
 
 @Module({
 	imports: [ConfigModule],
-	providers: [
-		{
-			provide: IEnvironmentService,
-			useClass: EnvironmentService,
-		},
-	],
-	exports: [IEnvironmentService],
+	providers: [EnvironmentService],
+	exports: [EnvironmentService],
 })
 export class EnvironmentModule {
 	static forRoot(options?: ConfigModuleOptions<Record<string, any>>): DynamicModule {

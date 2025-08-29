@@ -1,5 +1,5 @@
 export class EnvironmentNotFoundError extends Error {
 	constructor(value: string) {
-		super(`Environment Not Found: ${value}`);
+		super(`Environment Value Not Found: ${value}`);
 	}
 }

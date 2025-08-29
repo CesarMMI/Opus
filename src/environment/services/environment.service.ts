@@ -1,13 +1,10 @@
 import { Injectable, Scope } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { IEnvironmentService } from '../interfaces/environment.service.interface';
-import { Environment } from '../types/environment';
-import { EnvironmentDatabase } from '../types/environment-database';
+import { Environment, EnvironmentDatabase, EnvironmentSecurity } from '../types/environment';
 import { EnvironmentNotFoundError } from '../types/environment-not-found.error';
-import { EnvironmentSecurity } from '../types/environment-security';
 
 @Injectable({ scope: Scope.DEFAULT })
-export class EnvironmentService implements IEnvironmentService {
+export class EnvironmentService {
 	private _environment: Environment;
 
 	get environment(): Environment {
@@ -20,46 +17,36 @@ export class EnvironmentService implements IEnvironmentService {
 		this._environment = { database, security };
 	}
 
-	private getDatabase(configService: ConfigService): EnvironmentDatabase {
-		const host = configService.get<string>('DATABASE_HOST');
-		if (!host) throw new EnvironmentNotFoundError('Database Host');
-
-		const portStr = configService.get<string>('DATABASE_PORT');
-		if (!portStr) throw new EnvironmentNotFoundError('Database Port');
-		const port = +portStr;
-
-		const user = configService.get<string>('DATABASE_USER');
-		if (!user) throw new EnvironmentNotFoundError('Database User');
-
-		const pass = configService.get<string>('DATABASE_PASS');
-		if (!pass) throw new EnvironmentNotFoundError('Database Pass');
-
-		const database = configService.get<string>('DATABASE_DATABASE');
-		if (!database) throw new EnvironmentNotFoundError('Database Database');
-
-		const sync = !!configService.get<string>('DATABASE_SYNC');
-		if (!sync) throw new EnvironmentNotFoundError('Database Sync');
-
-		return { host, port, user, pass, database, sync };
+	private getDatabase(config: ConfigService): EnvironmentDatabase {
+		return {
+			host: this.getStringValue(config, 'DATABASE_HOST'),
+			port: this.getNumberValue(config, 'DATABASE_PORT'),
+			user: this.getStringValue(config, 'DATABASE_USER'),
+			pass: this.getStringValue(config, 'DATABASE_PASS'),
+			database: this.getStringValue(config, 'DATABASE_DATABASE'),
+			sync: !!this.getNumberValue(config, 'DATABASE_SYNC'),
+		};
 	}
 
 	private getSecurity(configService: ConfigService): EnvironmentSecurity {
-		const passwordSaltStr = configService.get<string>('SECURITY_PASSWORD_SALT');
-		if (!passwordSaltStr) throw new EnvironmentNotFoundError('Security Password Salt');
-		const passwordSalt = +passwordSaltStr;
+		return {
+			passwordSalt: this.getNumberValue(configService, 'SECURITY_PASSWORD_SALT'),
+			jwt: {
+				accessExp: this.getStringValue(configService, 'SECURITY_JWT_ACCESS_EXP'),
+				accessSecret: this.getStringValue(configService, 'SECURITY_JWT_ACCESS_SECRET'),
+				refreshExp: this.getStringValue(configService, 'SECURITY_JWT_REFRESH_EXP'),
+				refreshSecret: this.getStringValue(configService, 'SECURITY_JWT_REFRESH_SECRET'),
+			},
+		};
+	}
 
-		const accessExp = configService.get<string>('SECURITY_JWT_ACCESS_EXP');
-		if (!accessExp) throw new EnvironmentNotFoundError('Security Jwt Access Exp');
+	private getNumberValue(config: ConfigService, key: string): number {
+		return +this.getStringValue(config, key);
+	}
 
-		const accessSecret = configService.get<string>('SECURITY_JWT_ACCESS_SECRET');
-		if (!accessSecret) throw new EnvironmentNotFoundError('Security Jwt Access Secret');
-
-		const refreshExp = configService.get<string>('SECURITY_JWT_REFRESH_EXP');
-		if (!refreshExp) throw new EnvironmentNotFoundError('Security Jwt Refresh Exp');
-
-		const refreshSecret = configService.get<string>('SECURITY_JWT_REFRESH_SECRET');
-		if (!refreshSecret) throw new EnvironmentNotFoundError('Security Jwt Refresh Secret');
-
-		return { passwordSalt, jwt: { accessExp, accessSecret, refreshExp, refreshSecret } };
+	private getStringValue(config: ConfigService, key: string): string {
+		const value = config.get<string>(key);
+		if (!value) throw new EnvironmentNotFoundError(key);
+		return value;
 	}
 }
