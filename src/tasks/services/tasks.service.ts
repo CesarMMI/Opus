@@ -10,7 +10,7 @@ import { UpdateTaskRequest } from '../types/update-task.request';
 export class TasksService {
 	constructor(@InjectRepository(Task) private readonly taskRepository: Repository<Task>) {}
 
-	public async create(userId: string, request: CreateTaskRequest): Promise<Task> {
+	async create(userId: string, request: CreateTaskRequest): Promise<Task> {
 		let task = new Task();
 		task.title = request.title;
 		task.description = request.description;
@@ -20,11 +20,11 @@ export class TasksService {
 		return task;
 	}
 
-	public findAll(userId: string): Promise<Task[]> {
+	findAll(userId: string): Promise<Task[]> {
 		return this.taskRepository.find({ where: { user: { id: userId } }, order: { done: 'desc', createdAt: 'desc' } });
 	}
 
-	public async update(userId: string, id: string, request: UpdateTaskRequest): Promise<Task | null> {
+	async update(userId: string, id: string, request: UpdateTaskRequest): Promise<Task | null> {
 		let task = await this.findOne(userId, id);
 		if (!task) throw new NotFoundException('Task not found');
 
@@ -35,7 +35,7 @@ export class TasksService {
 		return task;
 	}
 
-	public async remove(userId: string, id: string) {
+	async remove(userId: string, id: string): Promise<Task | null> {
 		const task = await this.findOne(userId, id);
 		if (!task) throw new NotFoundException('Task not found');
 		await this.taskRepository.delete(task);

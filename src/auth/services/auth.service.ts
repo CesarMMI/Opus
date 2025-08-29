@@ -30,16 +30,10 @@ export class AuthService {
 	}
 
 	async register(request: RegisterRequest): Promise<AuthResponse> {
-		const saved = await this.usersService.findByEmail(request.email);
-		if (saved) throw new BadRequestException('Email already in use');
+		let user = await this.usersService.findByEmail(request.email);
+		if (user) throw new BadRequestException('Email already in use');
 
-		let user = new User();
-		user.name = request.name;
-		user.email = request.email;
-		const hashedPassword = await this.passwordService.hash(request.password);
-		user.password = hashedPassword;
-
-		user = await this.usersService.save(user);
+		user = await this.usersService.create(request.name, request.email, request.password);
 		return await this.generateAuthResponse(user);
 	}
 
