@@ -11,8 +11,8 @@ export class TasksController {
 
 	@Post()
 	@UseGuards(AuthGuard)
-	create(@Body() createTaskDto: CreateTaskRequest, @Request() request: AuthRequest) {
-		return this.tasksService.create(request.user.sub, createTaskDto);
+	create(@Body() body: CreateTaskRequest, @Request() request: AuthRequest) {
+		return this.tasksService.create(request.user.sub, body.title, body.description);
 	}
 
 	@Get()
@@ -23,8 +23,8 @@ export class TasksController {
 
 	@Patch(':id')
 	@UseGuards(AuthGuard)
-	update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskRequest, @Request() request: AuthRequest) {
-		return this.tasksService.update(request.user.sub, id, updateTaskDto);
+	update(@Param('id') id: string, @Body() body: UpdateTaskRequest, @Request() request: AuthRequest) {
+		return this.tasksService.update(request.user.sub, id, body.done);
 	}
 
 	@Delete(':id')

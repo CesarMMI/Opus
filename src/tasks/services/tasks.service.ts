@@ -3,17 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/entities/user.entity';
 import { Repository } from 'typeorm';
 import { Task } from '../entities/task.entity';
-import { CreateTaskRequest } from '../types/create-task.request';
-import { UpdateTaskRequest } from '../types/update-task.request';
 
 @Injectable()
 export class TasksService {
 	constructor(@InjectRepository(Task) private readonly taskRepository: Repository<Task>) {}
 
-	async create(userId: string, request: CreateTaskRequest): Promise<Task> {
+	async create(userId: string, title: string, description?: string): Promise<Task> {
 		let task = new Task();
-		task.title = request.title;
-		task.description = request.description;
+		task.title = title;
+		task.description = description;
 		task.done = false;
 		task.user = { id: userId } as User;
 		task = await this.taskRepository.save(task);
@@ -24,12 +22,15 @@ export class TasksService {
 		return this.taskRepository.find({ where: { user: { id: userId } }, order: { done: 'desc', createdAt: 'desc' } });
 	}
 
-	async update(userId: string, id: string, request: UpdateTaskRequest): Promise<Task | null> {
+	async update(userId: string, id: string, done: boolean): Promise<Task | null> {
 		let task = await this.findOne(userId, id);
 		if (!task) throw new NotFoundException('Task not found');
 
-		task.done = request.done;
-		task.doneAt = new Date();
+		if (done && !task.done) task.doneAt = new Date();
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+		else if (!done && (task.done || task.doneAt)) task.doneAt = null as any;
+		task.done = done;
+
 		task = await this.taskRepository.save(task);
 
 		return task;
@@ -38,6 +39,7 @@ export class TasksService {
 	async remove(userId: string, id: string): Promise<Task | null> {
 		const task = await this.findOne(userId, id);
 		if (!task) throw new NotFoundException('Task not found');
+
 		await this.taskRepository.delete(task);
 		return task;
 	}
