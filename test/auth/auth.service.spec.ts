@@ -35,7 +35,7 @@ describe('AuthService', () => {
 					provide: TokenService,
 					useValue: { verifyRefreshToken: jest.fn(), generateAccessToken: jest.fn(), generateRefreshToken: jest.fn() },
 				},
-				{ provide: UsersService, useValue: { findByEmail: jest.fn(), findById: jest.fn(), save: jest.fn() } },
+				{ provide: UsersService, useValue: { findByEmail: jest.fn(), findById: jest.fn(), create: jest.fn() } },
 			],
 		}).compile();
 
@@ -77,8 +77,7 @@ describe('AuthService', () => {
 	describe('register', () => {
 		it('should register successfully', async () => {
 			usersService.findByEmail.mockResolvedValue(null);
-			passwordService.hash.mockResolvedValue('hashed123');
-			usersService.save.mockResolvedValue(mockUser);
+			usersService.create.mockResolvedValue(mockUser);
 			tokenService.generateAccessToken.mockResolvedValue('access_token');
 			tokenService.generateRefreshToken.mockResolvedValue('refresh_token');
 
@@ -86,8 +85,7 @@ describe('AuthService', () => {
 			const result = await service.register(request);
 
 			expect(result).toBeInstanceOf(AuthResponse);
-			expect(usersService.save).toHaveBeenCalled();
-			expect(passwordService.hash).toHaveBeenCalledWith('123');
+			expect(usersService.create).toHaveBeenCalled();
 		});
 
 		it('should throw bad request if email already exists', async () => {
