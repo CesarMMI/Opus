@@ -3,7 +3,7 @@
 html {
   @include mat.theme((
     color: mat.$azure-palette,
-    typography: "Titillium Web",
+    typography: Roboto,
     density: 0,
   ));
 }
