@@ -1,0 +1,28 @@
+<app-toolbar />
+
+<main class="container">
+  <header><span class="title">Login</span></header>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <mat-label>Username</mat-label>
+      <input matInput type="email" name="email" id="email" formControlName="email" />
+      <mat-icon matIconPrefix>badge_id</mat-icon>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        [type]="passInputType()"
+        name="password"
+        id="password"
+        formControlName="password"
+      />
+      <mat-icon matIconPrefix>key</mat-icon>
+      <button matIconButton matIconSuffix type="button" (click)="togglePassVisibility()">
+        <mat-icon>{{ passVisibilityIcon() }}</mat-icon>
+      </button>
+    </mat-form-field>
+    <button matButton="filled" type="submit" [disabled]="form.invalid">Login</button>
+  </form>
+  <button matButton="text" type="button" routerLink="register">Register</button>
+</main>
