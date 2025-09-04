@@ -1,0 +1,9 @@
+<mat-toolbar>
+  <div class="container">
+    <ng-content select="[start]"></ng-content>
+    <span>{{ title() }}</span>
+    <ng-content select="[center]"></ng-content>
+    <span class="spacer"></span>
+    <ng-content select="[end]"></ng-content>
+  </div>
+</mat-toolbar>

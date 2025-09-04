@@ -1,6 +1,10 @@
 import { HttpContext, HttpHeaders, HttpParams } from '@angular/common/http';
 
-export type HttpOptions = {
+export type HttpOptions = NgHttpOptions & {
+  skipAuth?: boolean;
+};
+
+type NgHttpOptions = {
   headers?: HttpHeaders | Record<string, string | string[]>;
   context?: HttpContext;
   observe?: 'body';

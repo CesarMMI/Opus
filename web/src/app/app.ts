@@ -1,7 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router, RouterOutlet } from '@angular/router';
-import { AuthService } from './auth/service/auth.service';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -18,18 +16,4 @@ import { AuthService } from './auth/service/auth.service';
     }
   `,
 })
-export class App {
-  private router = inject(Router);
-  private authService = inject(AuthService);
-
-  constructor() {
-    this.authService.authenticated$.pipe(takeUntilDestroyed()).subscribe(() => this.reloadRouter());
-  }
-
-  private reloadRouter(): void {
-    const url = this.router.url;
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate([url]);
-    });
-  }
-}
+export class App {}

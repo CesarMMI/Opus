@@ -4,26 +4,29 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLink } from '@angular/router';
 import { first } from 'rxjs';
 import { AuthService } from '../../../auth/service/auth.service';
 import { ToolbarComponent } from '../../../shared/components/toolbar/toolbar.component';
+import { confirmPasswordValidator } from '../../validators/confirm-password.validator';
 
 @Component({
-  selector: 'app-login-page',
+  selector: 'app-register-page',
   imports: [
-    ReactiveFormsModule,
     RouterLink,
+    ReactiveFormsModule,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
     MatInputModule,
+    MatToolbarModule,
     ToolbarComponent,
   ],
-  templateUrl: './login.page.html',
-  styleUrls: ['./../../styles/container.scss', './login.page.scss'],
+  templateUrl: './register.page.html',
+  styleUrls: ['./../../styles/container.scss', './register.page.scss'],
 })
-export class LoginPage {
+export class RegisterPage {
   private router = inject(Router);
   private authService = inject(AuthService);
 
@@ -32,8 +35,13 @@ export class LoginPage {
   protected passInputType = computed(() => (this.passVisible() ? 'text' : 'password'));
 
   protected form = new FormGroup({
+    name: new FormControl<string | null>(null, [Validators.required]),
     email: new FormControl<string | null>(null, [Validators.required, Validators.email]),
     password: new FormControl<string | null>(null, [Validators.required]),
+    confirmPassword: new FormControl<string | null>(null, [
+      Validators.required,
+      confirmPasswordValidator,
+    ]),
   });
 
   protected togglePassVisibility() {
@@ -44,8 +52,9 @@ export class LoginPage {
     if (this.form.invalid) return;
 
     const value = this.form.value;
+    delete value.confirmPassword;
     this.authService
-      .login(value)
+      .register(value)
       .pipe(first())
       .subscribe(() => this.router.navigate(['/']));
   }
