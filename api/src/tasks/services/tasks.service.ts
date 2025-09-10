@@ -19,7 +19,7 @@ export class TasksService {
 	}
 
 	findAll(userId: string): Promise<Task[]> {
-		return this.taskRepository.find({ where: { user: { id: userId } }, order: { done: 'desc', createdAt: 'desc' } });
+		return this.taskRepository.find({ where: { user: { id: userId } }, order: { done: 'asc', createdAt: 'desc' } });
 	}
 
 	async update(userId: string, id: string, done: boolean): Promise<Task | null> {

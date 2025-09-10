@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { AuthRequest } from 'src/auth/types/requests/auth.request';
 import { TasksService } from '../services/tasks.service';
@@ -21,7 +21,7 @@ export class TasksController {
 		return this.tasksService.findAll(request.user.sub);
 	}
 
-	@Patch(':id')
+	@Post(':id')
 	@UseGuards(AuthGuard)
 	update(@Param('id') id: string, @Body() body: UpdateTaskRequest, @Request() request: AuthRequest) {
 		return this.tasksService.update(request.user.sub, id, body.done);
