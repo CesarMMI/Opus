@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router, RouterOutlet } from '@angular/router';
-import { AuthService } from './auth/service/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { RouterOutlet } from '@angular/router';
+import { MessageService } from './message/services/message.service';
 
 @Component({
   selector: 'app-root',
@@ -19,5 +20,9 @@ import { AuthService } from './auth/service/auth.service';
   `,
 })
 export class App {
-  constructor() {}
+  constructor(matSnackBar: MatSnackBar, messageService: MessageService) {
+    messageService.queue$
+      .pipe(takeUntilDestroyed())
+      .subscribe((message) => messageService.openSnackbar(matSnackBar, message));
+  }
 }
