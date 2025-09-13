@@ -5,9 +5,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { first } from 'rxjs';
-import { AuthService } from '../../../auth/service/auth.service';
+import { AuthService } from '../../../core/auth/service/auth.service';
 import { ToolbarComponent } from '../../../shared/components/toolbar/toolbar.component';
 import { confirmPasswordValidator } from '../../validators/confirm-password.validator';
 
@@ -27,7 +27,6 @@ import { confirmPasswordValidator } from '../../validators/confirm-password.vali
   styleUrls: ['./../../styles/container.scss', './register.page.scss'],
 })
 export class RegisterPage {
-  private router = inject(Router);
   private authService = inject(AuthService);
 
   private passVisible = signal(false);

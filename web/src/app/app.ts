@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RouterOutlet } from '@angular/router';
-import { MessageService } from './message/services/message.service';
+import { MessageService } from './core/message/services/message.service';
 
 @Component({
   selector: 'app-root',

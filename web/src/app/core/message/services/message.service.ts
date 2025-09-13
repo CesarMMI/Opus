@@ -1,13 +1,13 @@
 import { Injectable, signal } from '@angular/core';
+import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 import { Subject } from 'rxjs';
 import { Message } from '../types/message';
-import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 
 @Injectable({ providedIn: 'root' })
 export class MessageService {
   private _queue$ = new Subject<Message>();
-  private ref = signal<MatSnackBarRef<any> | undefined>(undefined);
   private durationSec = 5;
+  private ref = signal<MatSnackBarRef<any> | undefined>(undefined);
 
   readonly queue$ = this._queue$.asObservable();
 

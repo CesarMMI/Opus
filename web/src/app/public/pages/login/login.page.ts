@@ -4,9 +4,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { first } from 'rxjs';
-import { AuthService } from '../../../auth/service/auth.service';
+import { AuthService } from '../../../core/auth/service/auth.service';
 import { ToolbarComponent } from '../../../shared/components/toolbar/toolbar.component';
 
 @Component({
@@ -24,7 +24,6 @@ import { ToolbarComponent } from '../../../shared/components/toolbar/toolbar.com
   styleUrls: ['./../../styles/container.scss', './login.page.scss'],
 })
 export class LoginPage {
-  private router = inject(Router);
   private authService = inject(AuthService);
 
   private passVisible = signal(false);

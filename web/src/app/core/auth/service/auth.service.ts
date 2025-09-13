@@ -1,16 +1,16 @@
 import { computed, inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 import { distinctUntilChanged, tap } from 'rxjs';
-import { HttpService } from '../../shared/services/http.service';
-import { StorageService } from '../../shared/services/storage.service';
+import { PRIVATE_ROUTE } from '../../../private/private.routes';
+import { PUBLIC_ROUTE } from '../../../public/public.routes';
+import { HttpService } from '../../../shared/services/http.service';
+import { StorageService } from '../../../shared/services/storage.service';
 import { AuthResponse } from '../types/auth.response';
 import { LoginRequest } from '../types/login.request';
 import { RefreshRequest } from '../types/refresh.request';
 import { RegisterRequest } from '../types/register.request';
 import { User } from '../types/user';
-import { Router } from '@angular/router';
-import { PRIVATE_ROUTE } from '../../private/private.routes';
-import { PUBLIC_ROUTE } from '../../public/public.routes';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService extends HttpService {

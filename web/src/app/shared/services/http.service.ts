@@ -1,7 +1,7 @@
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { SKIP_AUTH } from '../../auth/contexts/skip-auth.context';
+import { SKIP_AUTH } from '../../core/auth/contexts/skip-auth.context';
 import { HttpOptions } from '../types/http-options';
 
 @Injectable()
