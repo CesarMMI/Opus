@@ -8,9 +8,13 @@ import { LoginRequest } from '../types/login.request';
 import { RefreshRequest } from '../types/refresh.request';
 import { RegisterRequest } from '../types/register.request';
 import { User } from '../types/user';
+import { Router } from '@angular/router';
+import { PRIVATE_ROUTE } from '../../private/private.routes';
+import { PUBLIC_ROUTE } from '../../public/public.routes';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService extends HttpService {
+  private router = inject(Router);
   private storage = inject(StorageService);
 
   private _user = signal(this.storage.get<User>('user'));
@@ -47,6 +51,7 @@ export class AuthService extends HttpService {
     this.setStorageSignal(this._user, 'user', user);
     this.setStorageSignal(this._accessToken, 'access-token', accessToken);
     this.setStorageSignal(this._refreshToken, 'refresh-token', refreshToken);
+    this.router.navigateByUrl(`/${this.authenticated() ? PRIVATE_ROUTE : PUBLIC_ROUTE}`);
   }
 
   private setStorageSignal(signal: WritableSignal<any>, storageKey: string, value?: any) {

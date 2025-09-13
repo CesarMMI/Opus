@@ -44,9 +44,6 @@ export class LoginPage {
     if (this.form.invalid) return;
 
     const value = this.form.value;
-    this.authService
-      .login(value)
-      .pipe(first())
-      .subscribe(() => this.router.navigate(['/']));
+    this.authService.login(value).pipe(first()).subscribe();
   }
 }

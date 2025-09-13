@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 
+export const PUBLIC_ROUTE: string = 'auth';
+
 export const publicRoutes: Routes = [
   {
     path: '',

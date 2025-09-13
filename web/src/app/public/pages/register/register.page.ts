@@ -53,9 +53,6 @@ export class RegisterPage {
 
     const value = this.form.value;
     delete value.confirmPassword;
-    this.authService
-      .register(value)
-      .pipe(first())
-      .subscribe(() => this.router.navigate(['/']));
+    this.authService.register(value).pipe(first()).subscribe();
   }
 }
