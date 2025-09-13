@@ -1,0 +1,18 @@
+<app-toolbar title="Tasks" />
+<main>
+  @for(task of tasks().todo; track task.id){
+  <app-task-list-item [task]="task" (checkClick)="checkTask(task, $event)" />
+  }
+
+  <button class="done-button" (click)="toggleShowDone()">
+    <mat-icon>{{ showDoneIcon() }}</mat-icon>
+    <span>Done ({{ showDoneCount() }})</span>
+  </button>
+
+  @if(showDone()){ @for(task of tasks().done; track task.id){
+  <app-task-list-item [task]="task" (checkClick)="checkTask(task, $event)" />
+  } }
+</main>
+<button matFab class="create-button" routerLink="create">
+  <mat-icon>add</mat-icon>
+</button>

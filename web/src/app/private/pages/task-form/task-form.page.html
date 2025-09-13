@@ -1,0 +1,7 @@
+<app-toolbar title="Create Task">
+  <button end matIconButton type="button" routerLink="..">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+</app-toolbar>
+
+<app-task-form (cancelEvent)="onCancel()" (submitEvent)="onSubmit($event)" />

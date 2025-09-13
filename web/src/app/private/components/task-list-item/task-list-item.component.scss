@@ -1,0 +1,22 @@
+:host {
+  display: contents;
+}
+
+.task {
+  align-items: center;
+  flex-direction: row;
+  gap: 0.5rem;
+  padding: 0.5rem;
+
+  &.done {
+    .task-title {
+      text-decoration: line-through;
+      color: var(--mat-sys-outline-variant);
+    }
+  }
+
+  &-title {
+    color: var(--mat-sys-on-surface);
+    font: var(--mat-sys-body-large);
+  }
+}

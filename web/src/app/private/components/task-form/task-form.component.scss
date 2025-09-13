@@ -1,0 +1,20 @@
+:host {
+  display: contents;
+}
+
+form {
+  gap: 1rem;
+  padding: 1rem;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.buttons {
+  gap: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.flex-grow {
+  flex: 1 1 auto;
+}

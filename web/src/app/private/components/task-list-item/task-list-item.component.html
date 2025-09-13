@@ -1,0 +1,10 @@
+@if(task(); as task) {
+<mat-card class="task" [class.done]="task.done" (click)="taskClick.emit(task.id)">
+  <mat-checkbox
+    [ngModel]="task.done"
+    (click)="$event.stopPropagation()"
+    (ngModelChange)="checkClick.emit($event)"
+  ></mat-checkbox>
+  <span class="task-title">{{ task.title }}</span>
+</mat-card>
+}

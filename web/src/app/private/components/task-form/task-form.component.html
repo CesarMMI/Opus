@@ -1,0 +1,25 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-form-field subscriptSizing="dynamic">
+    <mat-label>Title</mat-label>
+    <input #nameInput matInput type="text" name="title" id="title" formControlName="title" />
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic">
+    <mat-label>Description</mat-label>
+    <textarea
+      matInput
+      cdkTextareaAutosize
+      type="text"
+      name="description"
+      id="description"
+      formControlName="description"
+    ></textarea>
+  </mat-form-field>
+
+  <div class="buttons">
+    <button matButton type="button" routerLink=".." (click)="onCancel()">Cancel</button>
+    <button matButton="filled" type="submit" class="flex-grow" [disabled]="form.invalid">
+      Create
+    </button>
+  </div>
+</form>

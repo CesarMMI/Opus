@@ -1,11 +1,13 @@
 @use '@angular/material' as mat;
 
 html {
-  @include mat.theme((
-    color: mat.$azure-palette,
-    typography: Roboto,
-    density: 0,
-  ));
+  @include mat.theme(
+    (
+      color: mat.$azure-palette,
+      typography: Roboto,
+      density: 0,
+    )
+  );
 }
 
 body {
@@ -14,4 +16,12 @@ body {
   color: var(--mat-sys-on-surface);
   background-color: var(--mat-sys-surface);
   font: var(--mat-sys-body-medium);
+}
+
+:root {
+  @include mat.form-field-overrides(
+    (
+      outlined-outline-color: transparent
+    )
+  );
 }
