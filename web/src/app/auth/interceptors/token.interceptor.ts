@@ -36,7 +36,7 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
   );
 };
 
-const cloneReq = (req: HttpRequest<unknown>, authService: AuthService): HttpRequest<unknown> => {
+const cloneReq = (req: HttpRequest<unknown>, authService: AuthService) => {
   return req.clone({
     headers: new HttpHeaders({ Authorization: `Bearer ${authService.accessToken()}` }),
   });

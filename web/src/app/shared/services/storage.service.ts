@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class StorageService {
-  public get<T>(key: string): T | undefined {
+  public get<T>(key: string) {
     const stringValue = localStorage.getItem(key);
     if (!stringValue) return;
     try {
@@ -12,11 +12,11 @@ export class StorageService {
     }
   }
 
-  public set(key: string, value: any): void {
+  public set(key: string, value: any) {
     localStorage.setItem(key, JSON.stringify(value));
   }
 
-  public remove(key: string): void {
+  public remove(key: string) {
     localStorage.removeItem(key);
   }
 }

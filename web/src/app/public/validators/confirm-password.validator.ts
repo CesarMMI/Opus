@@ -1,6 +1,6 @@
-import { ValidationErrors, ValidatorFn } from '@angular/forms';
+import { ValidatorFn } from '@angular/forms';
 
-export const confirmPasswordValidator: ValidatorFn = (control): ValidationErrors | null => {
+export const confirmPasswordValidator: ValidatorFn = (control) => {
   const passwordControl = control.parent?.get('password');
   if (!passwordControl) return null;
 
